@@ -22,8 +22,8 @@ public class Main {
 		
 		//Make the parallel arrays for the data
 		ArrayList<Integer> values = new ArrayList<>(); 
-		ArrayList<String> codes = new ArrayList<>();
-		ArrayList<String> names = new ArrayList<>();
+		ArrayList<String> cardInfo = new ArrayList<>();
+		
 		
 		//Get the data for each card
 		while(reader.hasNextLine()) {
@@ -38,8 +38,17 @@ public class Main {
 			//Find the value in tickets
 			int value = 0;
 			
-			if(print < 100) {
+			if(print < 10){
 				value = 9999;
+			}
+			else if(print < 100) {
+				switch(edition){
+					case 6:
+						value = 9999;
+						break;
+					default:
+						value = wish/5;
+				}
 			}
 			else if(print < 1000) {
 				switch(edition) {
@@ -79,13 +88,39 @@ public class Main {
 			//Add card data to their respective array
 			values.add(value);
 			
-			String code = card[0].substring(1);
+			//Format the data for selling
+			String price = "\""+value+":tickets:\",";
+			String wl = "\"♡"+wish+"\",";
+			String code = "\""+card[0].substring(1)+"\",";
+
+			String quality = "";
 			
-			codes.add(code);
+			//☆ ★
+			switch(card[5]){
+				case "0":
+					quality = "\"☆☆☆☆\",";
+					break;
+				case "1":
+					quality = "\"★☆☆☆\",";
+					break;
+				case "2":
+					quality = "\"★★☆☆\",";
+					break;
+				case "3":
+					quality = "\"★★★☆\",";
+					break;
+				case "4":
+					quality = "\"★★★★\",";
+					break;
+			}
+
+			String number = "\"#"+print+"\",";
+			String ed = "\"◈"+edition+"\",";
+			String series = "\""+card[4]+"\",";
+			String character = "\""+card[3]+"\"";
 			
-			String name = card[3];
-			
-			names.add(name);
+			String cardFormatted = price+wl+code+quality+number+ed+series+character;
+			cardInfo.add(cardFormatted);
 		}
 		
 		//Sort the cards by their price, descending
@@ -98,16 +133,13 @@ public class Main {
 				for(int j = i+1; j < values.size(); j++) {
 					if(values.get(i) < values.get(j)) {
 						int tempValue = values.get(i);
-						String tempCode = codes.get(i);
-						String tempName = names.get(i);
+						String tempInfo = cardInfo.get(i);
 						
 						values.set(i, values.get(j));
-						codes.set(i, codes.get(j));
-						names.set(i, names.get(j));
+						cardInfo.set(i, cardInfo.get(j));
 						
 						values.set(j, tempValue);
-						codes.set(j, tempCode);
-						names.set(j, tempName);
+						cardInfo.set(j, tempInfo);
 						
 						sorted = false;
 					}
@@ -117,15 +149,14 @@ public class Main {
 		
 		//Print the data to the output file
 		PrintStream writer = new PrintStream(outputFile);
+		writer.println("\"Price\",\"Wishlist\",\"Code\",\"Quality\",\"Print\",\"Edition\",\"Series\",\"Character\"");
 
-		for(int i = 0; i < values.size(); i++) {
-			String cardData = "\""+values.get(i)+"\",\""+codes.get(i)+"\",\""+names.get(i)+"\"";
-			
+		for(int i = 0; i < cardInfo.size(); i++) {
 			if(i!= values.size()-1){
-				writer.println(cardData);
+				writer.println(cardInfo.get(i));
 			}
 			else{
-				writer.print(cardData);
+				writer.print(cardInfo.get(i));
 			}
 		}
 
