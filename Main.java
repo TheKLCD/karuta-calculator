@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Main {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		//Get the input file
-		File spreadsheet = new File("db17cc4cb25fa9a0c0b95b660286231b.csv");
+		File spreadsheet = new File("Example.csv");
 		Scanner reader = new Scanner(spreadsheet);
 		reader.nextLine();
 		
