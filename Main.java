@@ -1,24 +1,41 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.File;
+import java.io.PrintStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Main {
-	public static void main(String[] args) throws FileNotFoundException {
-		File spreadsheet = new File("C:\\Users\\mattf\\eclipse-workspace\\KarutaCalculator\\src\\db17cc4cb25fa9a0c0b95b660286231b.csv");
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		//Get the input file
+		File spreadsheet = new File("db17cc4cb25fa9a0c0b95b660286231b.csv");
 		Scanner reader = new Scanner(spreadsheet);
 		reader.nextLine();
 		
+		//Set up the output file
+		File outputFile = new File("Prices.csv");
+
+		if(!outputFile.createNewFile()){
+			outputFile.delete();
+			outputFile.createNewFile();
+		}
+		
+		//Make the parallel arrays for the data
 		ArrayList<Integer> values = new ArrayList<>(); 
 		ArrayList<String> codes = new ArrayList<>();
 		ArrayList<String> names = new ArrayList<>();
 		
+		//Get the data for each card
 		while(reader.hasNextLine()) {
+			//Split on ",", WARNING: index 0 still starts with a " and last index still ends in "
 			String[] card = reader.nextLine().split("\",\"");
 			
+			//Get values of the card
 			int print = Integer.parseInt(card[1]);
 			int wish = Integer.parseInt(card[16]);
 			int edition = Integer.parseInt(card[2]);
+
+			//Find the value in tickets
 			int value = 0;
 			
 			if(print < 100) {
@@ -59,6 +76,7 @@ public class Main {
 				}
 			}
 			
+			//Add card data to their respective array
 			values.add(value);
 			
 			String code = card[0].substring(1);
@@ -70,6 +88,7 @@ public class Main {
 			names.add(name);
 		}
 		
+		//Sort the cards by their price, descending
 		boolean sorted = false;
 		
 		while(!sorted) {
@@ -96,8 +115,21 @@ public class Main {
 			}
 		}
 		
+		//Print the data to the output file
+		PrintStream writer = new PrintStream(outputFile);
+
 		for(int i = 0; i < values.size(); i++) {
-			System.out.println(values.get(i)+","+codes.get(i)+","+names.get(i));
+			String cardData = "\""+values.get(i)+"\",\""+codes.get(i)+"\",\""+names.get(i)+"\"";
+			
+			if(i!= values.size()-1){
+				writer.println(cardData);
+			}
+			else{
+				writer.print(cardData);
+			}
 		}
+
+		reader.close();
+		writer.close();
 	}
 }
