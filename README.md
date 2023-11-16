@@ -1,6 +1,10 @@
 # Karuta Price Calculator
 A tool to convert your Discord Bot Karuta spreadsheet into a list of prices using the Keqing bot pricing guide.
 
+## Web Version
+
+There is now a more convenient web version with more features [here](https://theklcd.github.io/karutaCalculator/karuta-calculator.html)! This project still works if you wish to use this instead.
+
 ## Setup
 1. Download your spreadsheet from Karuta.
 
